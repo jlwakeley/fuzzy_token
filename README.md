@@ -87,6 +87,7 @@ Unauthorized testing may be illegal. Always ensure you have proper authorization
 
 ## Contributing
 
+Please feel free!
 1. Fork the repository
 2. Create your feature branch
 3. Commit your changes
