@@ -1,99 +1,69 @@
-# Token Fuzzing Tool
+# Fuzzy Token Tester
 
-A flexible Python-based token fuzzing tool designed for testing and discovering valid tokens in web applications. This tool can generate and test tokens of any length with customizable character sets.
-
-## Features
-
-- Generate tokens of any length
-- Customizable character sets for token generation
-- Load tokens from a file
-- Cookie support for authenticated sessions
-- Automatic header generation
-- Detailed console output
-- Support for POST requests
-- Configurable through command-line arguments
+A Python script for testing tokens against a web endpoint. Useful for security testing and token validation.
 
 ## Installation
 
-1. Clone the repository: 
-
-bash
-git clone https://github.com/yourusername/fuzzy_tokens.git
-cd fuzzy_tokens
-```
-
-2. Install required dependencies:
+1. Install the required Python package:
 ```bash
-pip install -r requirements.txt
+pip install requests
 ```
+
+2. Create a tokens file (see Token Generation section below)
 
 ## Usage
 
-### Command Syntax
+1. Edit `fuzzy.py` to configure:
+   - Target URL
+   - Cookies
+   - Headers
+   - Request data template
+
+2. Run the script:
 ```bash
-python fuzzy.py [-h] -u URL -n USERNAME -p PASSWORD (-l LENGTH | -f FILE) [-c CHARSET] [--cookie COOKIE]
+python fuzzy.py
 ```
 
-### Required Arguments
-- `-u, --url`: Target URL for token testing
-- `-n, --username`: Username for authentication
-- `-p, --password`: Password for authentication
+## Token Generation
 
-### Optional Arguments
-- `-l, --length`: Length of tokens to generate
-- `-f, --file`: Path to file containing tokens
-- `-c, --charset`: Custom character set (default: 0123456789)
-- `--cookie`: Session cookie value (PHPSESSID)
-- `-h, --help`: Show help message
+Here are several ways to generate token files using bash commands:
 
-### Examples
-
-1. Test 4-digit numeric pins:
+### Sequential Numbers
 ```bash
-python fuzzy.py -u http://target.com/reset.php -n admin -p password123 -l 4
+# Generate 4-digit numbers (0000-9999)
+seq -w 0 9999 > tokens.txt
+
+# Generate 6-digit numbers (000000-999999)
+seq -w 0 999999 > tokens.txt
 ```
 
-2. Use custom tokens from file:
+### Hexadecimal Tokens
 ```bash
-python fuzzy.py -u http://target.com/reset.php -n admin -p password123 -f tokens.txt
+# Generate 4-character hex tokens
+for i in {0..65535}; do printf "%04x\n" $i; done > tokens.txt
+
+# Generate 8-character hex tokens
+for i in {0..65535}; do printf "%08x\n" $i; done > tokens.txt
 ```
 
-3. Test with hexadecimal characters:
+### Random Strings
 ```bash
-python fuzzy.py -u http://target.com/reset.php -n admin -p password123 -l 4 -c "0123456789abcdef"
+# Generate 1000 random 8-character alphanumeric tokens
+for i in {1..1000}; do tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 8; echo; done > tokens.txt
+
+# Generate 1000 random 16-character alphanumeric tokens
+for i in {1..1000}; do tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 16; echo; done > tokens.txt
 ```
 
-4. Include session cookie:
+### Custom Pattern Tokens
 ```bash
-python fuzzy.py -u http://target.com/reset.php -n admin -p password123 -l 4 --cookie "abc123def456"
+# Generate tokens with prefix (e.g., "TOKEN_0000" to "TOKEN_9999")
+for i in $(seq -w 0 9999); do echo "TOKEN_$i"; done > tokens.txt
+
+# Generate date-based tokens for a month (YYYYMMDD format)
+seq -w 20240301 20240331 > tokens.txt
 ```
 
-## Token File Format
-When using the `-f` option, format your token file with one token per line:
-```text
-1234
-5678
-9012
-```
+## Security Note
 
-## Security Notice
-
-This tool is intended for:
-- Authorized security testing
-- Educational purposes
-- Penetration testing with explicit permission
-
-Unauthorized testing may be illegal. Always ensure you have proper authorization before testing any systems.
-
-## Contributing
-
-Please feel free!
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a new Pull Request
-
-## License
-
-This project is licensed under the MIT License.
+This tool is intended for authorized security testing only. Ensure you have permission to test the target system.
