@@ -7,7 +7,7 @@ url = "http://www.target.local:8080/target.php" # Change this
 with open("tokens.txt", "r") as file:
     tokens = file.read().splitlines()
 
-# Define the cookies
+# Define the cookies (change this)
 cookies = {
     "PHPSESSID": "cqvjbdjcs2er17mdhejf93rkpr"
 }
